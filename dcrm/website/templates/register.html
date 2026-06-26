@@ -3,7 +3,7 @@
 {% block content %}
 <style>
     /* ========================================================
-       REGISTER PAGE — PREMIUM STEP FORM DESIGN STYLING
+        REGISTER PAGE — PREMIUM STEP FORM DESIGN STYLING
        ======================================================== */
 
     .register-scene {
@@ -90,7 +90,7 @@
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 60%);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
     }
 
     .register-card-header h1 {
@@ -233,7 +233,9 @@
         font-size: 0.88rem;
     }
 
-    .register-card .alert-warning strong { font-weight: 700; }
+    .register-card .alert-warning strong {
+        font-weight: 700;
+    }
 
     .register-card .alert-warning ul {
         margin-top: 0.5rem;
@@ -271,7 +273,7 @@
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
         opacity: 0;
         transition: opacity var(--duration-fast) ease;
     }
@@ -318,6 +320,7 @@
         .form-grid {
             grid-template-columns: 1fr;
         }
+
         .register-card-header,
         .register-card-body {
             padding-left: 1.5rem;
@@ -343,9 +346,9 @@
                     <strong>Error de registro:</strong> por favor revise los datos ingresados.
                     <ul>
                         {% for field in form %}
-                            {% for error in field.errors %}
-                                <li><strong>{{ field.label }}:</strong> {{ error }}</li>
-                            {% endfor %}
+                        {% for error in field.errors %}
+                        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                        {% endfor %}
                         {% endfor %}
                     </ul>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
@@ -362,10 +365,12 @@
                         {{ form.username.label_tag }}
                         {{ form.username }}
                         {% if form.username.errors %}
-                            <small class="text-danger" style="color: #fb7185 !important; font-size: 0.75rem; display: block; margin-top: 0.2rem;">{{ form.username.errors.0 }}</small>
+                        <small class="text-danger"
+                            style="color: #fb7185 !important; font-size: 0.75rem; display: block; margin-top: 0.2rem;">{{
+                            form.username.errors.0 }}</small>
                         {% endif %}
                         {% if form.username.help_text %}
-                            <small class="form-text text-muted">{{ form.username.help_text|safe }}</small>
+                        <small class="form-text text-muted">{{ form.username.help_text|safe }}</small>
                         {% endif %}
                     </div>
                 </div>
@@ -379,22 +384,30 @@
                     <div class="form-group">
                         {{ form.first_name.label_tag }}
                         {{ form.first_name }}
-                        {% if form.first_name.errors %}<small class="text-danger" style="color: #fb7185 !important; font-size: 0.75rem; margin-top: 0.2rem;">{{ form.first_name.errors.0 }}</small>{% endif %}
+                        {% if form.first_name.errors %}<small class="text-danger"
+                            style="color: #fb7185 !important; font-size: 0.75rem; margin-top: 0.2rem;">{{
+                            form.first_name.errors.0 }}</small>{% endif %}
                     </div>
                     <div class="form-group">
                         {{ form.last_name.label_tag }}
                         {{ form.last_name }}
-                        {% if form.last_name.errors %}<small class="text-danger" style="color: #fb7185 !important; font-size: 0.75rem; margin-top: 0.2rem;">{{ form.last_name.errors.0 }}</small>{% endif %}
+                        {% if form.last_name.errors %}<small class="text-danger"
+                            style="color: #fb7185 !important; font-size: 0.75rem; margin-top: 0.2rem;">{{
+                            form.last_name.errors.0 }}</small>{% endif %}
                     </div>
                     <div class="form-group">
                         {{ form.email.label_tag }}
                         {{ form.email }}
-                        {% if form.email.errors %}<small class="text-danger" style="color: #fb7185 !important; font-size: 0.75rem; margin-top: 0.2rem;">{{ form.email.errors.0 }}</small>{% endif %}
+                        {% if form.email.errors %}<small class="text-danger"
+                            style="color: #fb7185 !important; font-size: 0.75rem; margin-top: 0.2rem;">{{
+                            form.email.errors.0 }}</small>{% endif %}
                     </div>
                     <div class="form-group">
                         {{ form.phone.label_tag }}
                         {{ form.phone }}
-                        {% if form.phone.errors %}<small class="text-danger" style="color: #fb7185 !important; font-size: 0.75rem; margin-top: 0.2rem;">{{ form.phone.errors.0 }}</small>{% endif %}
+                        {% if form.phone.errors %}<small class="text-danger"
+                            style="color: #fb7185 !important; font-size: 0.75rem; margin-top: 0.2rem;">{{
+                            form.phone.errors.0 }}</small>{% endif %}
                     </div>
                 </div>
 
@@ -407,22 +420,30 @@
                     <div class="form-group full-width">
                         {{ form.address.label_tag }}
                         {{ form.address }}
-                        {% if form.address.errors %}<small class="text-danger" style="color: #fb7185 !important; font-size: 0.75rem; margin-top: 0.2rem;">{{ form.address.errors.0 }}</small>{% endif %}
+                        {% if form.address.errors %}<small class="text-danger"
+                            style="color: #fb7185 !important; font-size: 0.75rem; margin-top: 0.2rem;">{{
+                            form.address.errors.0 }}</small>{% endif %}
                     </div>
                     <div class="form-group">
                         {{ form.city.label_tag }}
                         {{ form.city }}
-                        {% if form.city.errors %}<small class="text-danger" style="color: #fb7185 !important; font-size: 0.75rem; margin-top: 0.2rem;">{{ form.city.errors.0 }}</small>{% endif %}
+                        {% if form.city.errors %}<small class="text-danger"
+                            style="color: #fb7185 !important; font-size: 0.75rem; margin-top: 0.2rem;">{{
+                            form.city.errors.0 }}</small>{% endif %}
                     </div>
                     <div class="form-group">
                         {{ form.state.label_tag }}
                         {{ form.state }}
-                        {% if form.state.errors %}<small class="text-danger" style="color: #fb7185 !important; font-size: 0.75rem; margin-top: 0.2rem;">{{ form.state.errors.0 }}</small>{% endif %}
+                        {% if form.state.errors %}<small class="text-danger"
+                            style="color: #fb7185 !important; font-size: 0.75rem; margin-top: 0.2rem;">{{
+                            form.state.errors.0 }}</small>{% endif %}
                     </div>
                     <div class="form-group full-width">
                         {{ form.zip_code.label_tag }}
                         {{ form.zip_code }}
-                        {% if form.zip_code.errors %}<small class="text-danger" style="color: #fb7185 !important; font-size: 0.75rem; margin-top: 0.2rem;">{{ form.zip_code.errors.0 }}</small>{% endif %}
+                        {% if form.zip_code.errors %}<small class="text-danger"
+                            style="color: #fb7185 !important; font-size: 0.75rem; margin-top: 0.2rem;">{{
+                            form.zip_code.errors.0 }}</small>{% endif %}
                     </div>
                 </div>
 
@@ -436,20 +457,24 @@
                         {{ form.password1.label_tag }}
                         {{ form.password1 }}
                         {% if form.password1.errors %}
-                            <small class="text-danger" style="color: #fb7185 !important; font-size: 0.75rem; margin-top: 0.2rem;">{{ form.password1.errors.0 }}</small>
+                        <small class="text-danger"
+                            style="color: #fb7185 !important; font-size: 0.75rem; margin-top: 0.2rem;">{{
+                            form.password1.errors.0 }}</small>
                         {% endif %}
                         {% if form.password1.help_text %}
-                            <small class="form-text text-muted">{{ form.password1.help_text|safe }}</small>
+                        <small class="form-text text-muted">{{ form.password1.help_text|safe }}</small>
                         {% endif %}
                     </div>
                     <div class="form-group">
                         {{ form.password2.label_tag }}
                         {{ form.password2 }}
                         {% if form.password2.errors %}
-                            <small class="text-danger" style="color: #fb7185 !important; font-size: 0.75rem; margin-top: 0.2rem;">{{ form.password2.errors.0 }}</small>
+                        <small class="text-danger"
+                            style="color: #fb7185 !important; font-size: 0.75rem; margin-top: 0.2rem;">{{
+                            form.password2.errors.0 }}</small>
                         {% endif %}
                         {% if form.password2.help_text %}
-                            <small class="form-text text-muted">{{ form.password2.help_text|safe }}</small>
+                        <small class="form-text text-muted">{{ form.password2.help_text|safe }}</small>
                         {% endif %}
                     </div>
                 </div>

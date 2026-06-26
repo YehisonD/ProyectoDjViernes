@@ -3,7 +3,7 @@
 {% block content %}
 <style>
     /* ========================================================
-       CREATE COMPONENTE — PREMIUM FORM CARD STYLING
+        CREATE COMPONENTE — PREMIUM FORM CARD STYLING
        ======================================================== */
 
     .form-scene {
@@ -77,7 +77,7 @@
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 60%);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
     }
 
     .form-card-header h1 {
@@ -169,7 +169,7 @@
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
         opacity: 0;
         transition: opacity var(--duration-fast) ease;
     }
@@ -216,6 +216,7 @@
     }
 
     @media (max-width: 600px) {
+
         .form-card-header,
         .form-card-body {
             padding-left: 1.5rem;
@@ -235,32 +236,32 @@
         <div class="form-card-body">
             <form method="POST" action="{% url 'componente_create' %}">
                 {% csrf_token %}
-                
+
                 <p>
                     <label for="id_nombre">Nombre del Componente</label>
                     {{ form.nombre }}
                 </p>
-                
+
                 <p>
                     <label for="id_categoria">Categoría</label>
                     {{ form.categoria }}
                 </p>
-                
+
                 <p>
                     <label for="id_especificacion">Especificaciones Técnicas</label>
                     {{ form.especificacion }}
                 </p>
-                
+
                 <p>
                     <label for="id_gama">Gama de Rendimiento</label>
                     {{ form.gama }}
                 </p>
-                
+
                 <p>
                     <label for="id_precio">Precio (USD)</label>
                     {{ form.precio }}
                 </p>
-                
+
                 <p>
                     <label for="id_stock">Stock Inicial</label>
                     {{ form.stock }}
@@ -274,7 +275,8 @@
             <div class="form-footer">
                 <a href="{% url 'componentes_list' %}">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                     Volver a Componentes
                 </a>
