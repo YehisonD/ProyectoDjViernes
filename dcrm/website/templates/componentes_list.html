@@ -1,0 +1,800 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* ========================================================
+       COMPONENTES LIST — COSMIC NOIR STYLING
+       ======================================================== */
+
+    .comp-container {
+        width: 100%;
+        animation: fadeInUp 0.5s var(--ease-out-expo) both;
+    }
+
+    /* Header */
+    .comp-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .comp-header-left h1 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        background: var(--gradient-text);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.2rem;
+    }
+
+    .comp-header-left p {
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+    }
+
+    .btn-add-comp {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.75rem 1.6rem;
+        background: var(--gradient-primary);
+        color: #fff !important;
+        text-decoration: none !important;
+        border-radius: var(--radius-full);
+        font-size: 0.9rem;
+        font-weight: 700;
+        transition: all var(--duration-normal) var(--ease-out-expo);
+        box-shadow: var(--shadow-glow-teal);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-add-comp::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+        opacity: 0;
+        transition: opacity var(--duration-fast) ease;
+    }
+
+    .btn-add-comp:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(13, 148, 136, 0.4);
+    }
+
+    .btn-add-comp:hover::before { opacity: 1; }
+
+    .btn-add-icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        font-weight: 800;
+    }
+
+    /* Stats row */
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.25rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: rgba(11, 15, 25, 0.4);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-md);
+        padding: 1.25rem 1.5rem;
+        transition: all var(--duration-normal) var(--ease-out-expo);
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        opacity: 0.7;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(6, 182, 212, 0.25);
+        box-shadow: var(--shadow-sm), var(--shadow-glow-cyan);
+    }
+
+    .stat-card:nth-child(1)::before { background: var(--gradient-primary); }
+    .stat-card:nth-child(2)::before { background: var(--gradient-success); }
+    .stat-card:nth-child(3)::before { background: var(--gradient-danger); }
+    .stat-card:nth-child(4)::before { background: var(--gradient-warning); }
+
+    .stat-card-title {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-weight: 700;
+        margin-bottom: 0.4rem;
+    }
+
+    .stat-card-value {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        letter-spacing: -0.02em;
+    }
+
+    /* Filter panel */
+    .filter-panel {
+        background: rgba(11, 15, 25, 0.3);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+
+    .filter-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--accent-cyan);
+        margin-bottom: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+        gap: 1rem;
+        align-items: flex-end;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .filter-group label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-secondary);
+        margin-bottom: 0.45rem;
+    }
+
+    .filter-control {
+        background: rgba(255, 255, 255, 0.01) !important;
+        border: 1px solid var(--border-default) !important;
+        border-radius: var(--radius-sm) !important;
+        color: var(--text-primary) !important;
+        font-size: 0.85rem !important;
+        padding: 0.65rem 0.9rem !important;
+        outline: none !important;
+        transition: all var(--duration-fast) ease;
+        height: 38px;
+    }
+
+    .filter-control:focus {
+        border-color: var(--border-focus) !important;
+        background: rgba(13, 148, 136, 0.02) !important;
+        box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.1) !important;
+    }
+
+    .filter-checkbox-wrap {
+        display: flex;
+        align-items: center;
+        height: 38px;
+        gap: 0.5rem;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .filter-checkbox {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        border: 1.5px solid var(--border-default);
+        background: rgba(255, 255, 255, 0.02);
+        appearance: none;
+        -webkit-appearance: none;
+        cursor: pointer;
+        transition: all var(--duration-fast) ease;
+        position: relative;
+    }
+
+    .filter-checkbox:checked {
+        background: var(--accent-teal);
+        border-color: var(--accent-teal);
+    }
+
+    .filter-checkbox:checked::after {
+        content: '✓';
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        color: #fff;
+        font-weight: 700;
+    }
+
+    .filter-checkbox-label {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .btn-filter-action {
+        height: 38px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        padding: 0 1.25rem;
+        font-size: 0.85rem;
+        font-weight: 700;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all var(--duration-fast) ease;
+        text-decoration: none !important;
+        border: none;
+    }
+
+    .btn-filter-submit {
+        background: var(--gradient-primary);
+        color: white !important;
+        box-shadow: 0 4px 12px rgba(13, 148, 136, 0.2);
+    }
+
+    .btn-filter-submit:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(13, 148, 136, 0.3);
+    }
+
+    .btn-filter-reset {
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--text-secondary) !important;
+        border: 1px solid var(--border-default);
+    }
+
+    .btn-filter-reset:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text-primary) !important;
+    }
+
+    /* Badges */
+    .badge-gama {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.2rem 0.65rem;
+        font-size: 0.72rem;
+        font-weight: 700;
+        border-radius: var(--radius-full);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .gama-alta {
+        background: rgba(245, 158, 11, 0.08);
+        border: 1px solid rgba(245, 158, 11, 0.2);
+        color: #fbbf24;
+    }
+
+    .gama-media {
+        background: rgba(6, 182, 212, 0.08);
+        border: 1px solid rgba(6, 182, 212, 0.2);
+        color: #22d3ee;
+    }
+
+    .gama-baja {
+        background: rgba(148, 163, 184, 0.08);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        color: #cbd5e1;
+    }
+
+    .badge-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.2rem 0.65rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        border-radius: var(--radius-full);
+    }
+
+    .badge-status::before {
+        content: '';
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+    }
+
+    .status-activo {
+        background: rgba(16, 185, 129, 0.08);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        color: #34d399;
+    }
+    .status-activo::before { background: #10b981; }
+
+    .status-inactivo {
+        background: rgba(244, 63, 94, 0.08);
+        border: 1px solid rgba(244, 63, 94, 0.2);
+        color: #fb7185;
+    }
+    .status-inactivo::before { background: #f43f5e; }
+
+    .stock-badge {
+        font-family: var(--font-mono);
+        font-weight: 700;
+    }
+    .stock-ok { color: #34d399; }
+    .stock-zero {
+        color: #fb7185;
+        background: rgba(244, 63, 94, 0.05);
+        padding: 0.1rem 0.4rem;
+        border-radius: 4px;
+        border: 1px solid rgba(244, 63, 94, 0.15);
+    }
+
+    /* Actions Table buttons */
+    .btn-action-sm {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: var(--radius-sm);
+        transition: all var(--duration-fast) ease;
+        text-decoration: none !important;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-action-delete {
+        background: rgba(244, 63, 94, 0.08);
+        color: #fb7185;
+        border: 1px solid rgba(244, 63, 94, 0.15);
+    }
+
+    .btn-action-delete:hover {
+        background: #f43f5e;
+        color: white;
+        box-shadow: 0 4px 12px rgba(244, 63, 94, 0.2);
+    }
+
+    .btn-action-reactivate {
+        background: rgba(16, 185, 129, 0.08);
+        color: #34d399;
+        border: 1px solid rgba(16, 185, 129, 0.15);
+    }
+
+    .btn-action-reactivate:hover {
+        background: #10b981;
+        color: white;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    }
+
+    .btn-action-sm svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    /* Table & Container styling, inherits base.html tokens */
+    .table-container {
+        background: rgba(11, 15, 25, 0.4);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: var(--shadow-md);
+        position: relative;
+    }
+
+    .table-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--gradient-primary);
+    }
+
+    .table-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.5rem 1.75rem;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .table-header h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .table-header .table-count {
+        font-size: 0.78rem;
+        color: var(--accent-cyan);
+        background: rgba(6, 182, 212, 0.08);
+        padding: 0.3rem 0.85rem;
+        border-radius: var(--radius-full);
+        border: 1px solid rgba(6, 182, 212, 0.15);
+        font-weight: 700;
+        font-family: var(--font-mono);
+    }
+
+    .data-table-wrapper {
+        overflow-x: auto;
+        width: 100%;
+    }
+
+    .data-table {
+        width: 100%;
+        min-width: 950px;
+        border-collapse: collapse;
+    }
+
+    .data-table thead th {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-muted);
+        padding: 1rem 1.25rem;
+        background: rgba(3, 7, 18, 0.2);
+        border-bottom: 1px solid var(--border-subtle);
+        text-align: left;
+    }
+
+    .data-table tbody tr {
+        border-bottom: 1px solid var(--border-subtle);
+        transition: background-color var(--duration-fast) ease;
+    }
+
+    .data-table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .data-table tbody tr:hover {
+        background: rgba(13, 148, 136, 0.03);
+    }
+
+    .data-table tbody td,
+    .data-table tbody th {
+        font-size: 0.92rem;
+        color: var(--text-secondary);
+        padding: 1.1rem 1.25rem;
+        vertical-align: middle;
+    }
+
+    .data-table tbody th {
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    .data-table .cell-mono {
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+    }
+
+    .cell-price {
+        font-weight: 700;
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+    }
+
+    /* Responsive */
+    @media (max-width: 1100px) {
+        .stats-row {
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .filter-grid {
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .stats-row {
+            grid-template-columns: 1fr;
+            gap: 0.85rem;
+        }
+
+        .filter-grid {
+            grid-template-columns: 1fr;
+            gap: 0.85rem;
+        }
+
+        /* Mobile table layout */
+        .table-container {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            overflow: visible;
+        }
+        .table-container::before { display: none; }
+        .table-header { display: none; }
+
+        .data-table,
+        .data-table thead,
+        .data-table tbody,
+        .data-table th,
+        .data-table td,
+        .data-table tr {
+            display: block;
+        }
+
+        .data-table thead { display: none; }
+        .data-table { min-width: 0; }
+
+        .data-table tbody tr {
+            margin-bottom: 1.25rem;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: rgba(11, 15, 25, 0.5);
+            border: 1px solid var(--border-default);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .data-table td,
+        .data-table th {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            white-space: normal;
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.8rem 1.2rem;
+            text-align: right;
+            font-size: 0.88rem;
+        }
+
+        .data-table td::before {
+            content: attr(data-label);
+            flex: 0 0 45%;
+            text-align: left;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .data-table th::before {
+            content: "Nro. Componente";
+            flex: 0 0 45%;
+            text-align: left;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+    }
+</style>
+
+<div class="comp-container">
+    <!-- Header -->
+    <div class="comp-header">
+        <div class="comp-header-left">
+            <h1>Gestión de Componentes</h1>
+            <p>Monitorea, filtra y administra el inventario de partes y piezas del sistema.</p>
+        </div>
+        <a href="{% url 'componente_create' %}" class="btn-add-comp">
+            <span class="btn-add-icon">+</span>
+            Nuevo Componente
+        </a>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-card-title">Total Componentes</div>
+            <div class="stat-card-value">{{ stats.total }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-title">Activos</div>
+            <div class="stat-card-value" style="color: #34d399;">{{ stats.activos }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-title">Desactivados</div>
+            <div class="stat-card-value" style="color: #fb7185;">{{ stats.inactivos }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-title">Con Stock Disponible</div>
+            <div class="stat-card-value" style="color: #fbbf24;">{{ stats.con_stock }}</div>
+        </div>
+    </div>
+
+    <!-- Filters Panel -->
+    <div class="filter-panel">
+        <div class="filter-title">
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-right: 0.2rem;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+            </svg>
+            Filtros de Búsqueda
+        </div>
+        <form method="GET" action="{% url 'componentes_list' %}">
+            <div class="filter-grid">
+                <!-- Search term -->
+                <div class="filter-group">
+                    <label for="buscar">Buscar</label>
+                    <input type="text" class="filter-control" name="buscar" id="buscar" placeholder="Nombre o especificación..." value="{{ filtros.buscar }}">
+                </div>
+
+                <!-- Category -->
+                <div class="filter-group">
+                    <label for="categoria">Categoría</label>
+                    <select class="filter-control form-select" name="categoria" id="categoria">
+                        <option value="">Todas</option>
+                        {% for cat_val, cat_lbl in categorias %}
+                            <option value="{{ cat_val }}" {% if filtros.categoria == cat_val %}selected{% endif %}>{{ cat_lbl }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Status -->
+                <div class="filter-group">
+                    <label for="activo">Estado</label>
+                    <select class="filter-control form-select" name="activo" id="activo">
+                        <option value="">Todos</option>
+                        <option value="1" {% if filtros.activo == '1' %}selected{% endif %}>Activos</option>
+                        <option value="0" {% if filtros.activo == '0' %}selected{% endif %}>Inactivos</option>
+                    </select>
+                </div>
+
+                <!-- Price Min -->
+                <div class="filter-group">
+                    <label for="precio_min">Precio Mín</label>
+                    <input type="number" class="filter-control" name="precio_min" id="precio_min" placeholder="0" min="0" step="0.01" value="{{ filtros.precio_min }}">
+                </div>
+
+                <!-- Price Max -->
+                <div class="filter-group">
+                    <label for="precio_max">Precio Máx</label>
+                    <input type="number" class="filter-control" name="precio_max" id="precio_max" placeholder="Max" min="0" step="0.01" value="{{ filtros.precio_max }}">
+                </div>
+
+                <!-- Stock Toggle -->
+                <div class="filter-group">
+                    <div class="filter-checkbox-wrap" onclick="const cb = document.getElementById('con_stock'); cb.checked = !cb.checked;">
+                        <input type="checkbox" class="filter-checkbox" name="con_stock" id="con_stock" value="1" {% if filtros.con_stock == '1' %}checked{% endif %} onclick="event.stopPropagation();">
+                        <span class="filter-checkbox-label">Solo con Stock</span>
+                    </div>
+                </div>
+
+                <!-- Mis Componentes Toggle -->
+                <div class="filter-group">
+                    <div class="filter-checkbox-wrap" onclick="const cb = document.getElementById('mis_componentes'); cb.checked = !cb.checked;">
+                        <input type="checkbox" class="filter-checkbox" name="mis_componentes" id="mis_componentes" value="1" {% if filtros.mis_componentes == '1' %}checked{% endif %} onclick="event.stopPropagation();">
+                        <span class="filter-checkbox-label">Mis Componentes</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.25rem;">
+                <a href="{% url 'componentes_list' %}" class="btn-filter-action btn-filter-reset">
+                    Limpiar Filtros
+                </a>
+                <button type="submit" class="btn-filter-action btn-filter-submit">
+                    Aplicar Filtros
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container">
+        <div class="table-header">
+            <h3>Inventario de Componentes</h3>
+            <span class="table-count">{{ componentes|length }} componente(s)</span>
+        </div>
+
+        <div class="data-table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 70px;">ID</th>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Especificación</th>
+                        <th>Gama</th>
+                        <th>Precio</th>
+                        <th style="text-align: center;">Stock</th>
+                        <th>Estado</th>
+                        <th style="width: 100px; text-align: center;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if componentes %}
+                        {% for comp in componentes %}
+                        <tr>
+                            <th scope="row" class="cell-mono">#{{ comp.id }}</th>
+                            <td data-label="Nombre" style="font-weight: 600; color: var(--text-primary);">{{ comp.nombre }}</td>
+                            <td data-label="Categoría">{{ comp.categoria }}</td>
+                            <td data-label="Especificación" style="white-space: normal; max-width: 250px;">{{ comp.especificacion }}</td>
+                            <td data-label="Gama">
+                                <span class="badge-gama {% if comp.gama == 'alta' %}gama-alta{% elif comp.gama == 'media' %}gama-media{% else %}gama-baja{% endif %}">
+                                    {{ comp.gama }}
+                                </span>
+                            </td>
+                            <td data-label="Precio" class="cell-price">${{ comp.precio }}</td>
+                            <td data-label="Stock" style="text-align: center;">
+                                <span class="stock-badge {% if comp.stock > 0 %}stock-ok{% else %}stock-zero{% endif %}">
+                                    {% if comp.stock > 0 %}{{ comp.stock }} u.{% else %}Sin Stock{% endif %}
+                                </span>
+                            </td>
+                            <td data-label="Estado">
+                                <span class="badge-status {% if comp.activo %}status-activo{% else %}status-inactivo{% endif %}">
+                                    {% if comp.activo %}Activo{% else %}Inactivo{% endif %}
+                                </span>
+                            </td>
+                            <td data-label="Acciones" style="text-align: center;">
+                                {% if comp.activo %}
+                                    <!-- Logical delete button -->
+                                    <form method="POST" action="{% url 'componente_delete' comp.id %}" style="display: inline;" onsubmit="return confirm('¿Desactivar el componente &quot;{{ comp.nombre }}&quot;?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-action-sm btn-action-delete" title="Desactivar Componente">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <!-- Reactivation button -->
+                                    <form method="POST" action="{% url 'componente_reactivar' comp.id %}" style="display: inline;" onsubmit="return confirm('¿Reactivar el componente &quot;{{ comp.nombre }}&quot;?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-action-sm btn-action-reactivate" title="Reactivar Componente">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="9">
+                                <div class="table-empty">
+                                    <div class="table-empty-icon">🔌</div>
+                                    <h4>Sin componentes encontrados</h4>
+                                    <p>No se encontraron componentes con los filtros seleccionados o el catálogo está vacío.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
