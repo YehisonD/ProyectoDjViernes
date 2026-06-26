@@ -1,0 +1,111 @@
+@startuml
+!theme spacelab
+
+title "Modelo C1: Diagrama de Contexto del CRM"
+
+actor "Usuario / Administrador" as User
+rectangle "Sistema CRM PRO" as System
+database "Base de Datos (MariaDB/MySQL)" as DB
+
+User -down-> System : "Interactúa con la SPA (Lee/Escribe/Modifica datos)"
+System -down-> DB : "Almacena datos, roles y credenciales"
+
+@enduml
+
+@startuml
+!theme spacelab
+title "Modelo C2: Diagrama de Contenedores"
+
+actor "Usuario" as User
+
+package "Contenedor de Presentación (Frontend)" {
+    component "Single Page App (Vanilla JS + HTML + CSS)" as SPA
+}
+
+package "Contenedor de Aplicación (Backend - Django)" {
+    component "URLs & Rutas" as URLs
+    component "Vistas (Lógica de Negocio)" as Views
+    component "Formularios (Validación Regex)" as Forms
+    component "Modelos (Active Record)" as Models
+}
+
+database "MariaDB/MySQL" as DB
+
+User --> SPA : "Navegación e Interacción"
+SPA <--> URLs : "Fetch HTTP (AJAX/GET/POST)"
+URLs --> Views : "Enrutamiento"
+Views <--> Forms : "Validación y Limpieza"
+Views <--> Models : "Consulta y Persistencia"
+Models <--> DB : "SQL Consultas"
+
+@enduml
+
+@startuml
+!theme spacelab
+title "Modelo C3: Diagrama de Componentes (Vistas)"
+
+package "App 'website' (Django)" {
+    component "home (Vista Principal)" as homeView
+    component "register_user (Autenticación)" as authView
+    component "add_record (CRUD)" as createView
+    component "update_record (CRUD)" as updateView
+    component "delete_record (CRUD)" as deleteView
+    
+    component "Control de Roles" as RoleChecker
+}
+
+package "Grupos Django" {
+    component "Grupo Administrador" as AdminGroup
+}
+
+homeView --> authView : "Redirige si no está autenticado"
+updateView --> RoleChecker : "Verifica Permisos"
+deleteView --> RoleChecker : "Verifica Permisos"
+RoleChecker --> AdminGroup : "Consulta Grupo del Usuario"
+
+@enduml
+
+@startuml
+!theme spacelab
+title "Modelo C4: Diagrama de Clases (Código - Formularios y Modelos)"
+
+class Record {
+    + created_at: DateTimeField
+    + first_name: CharField(50)
+    + last_name: CharField(50)
+    + email: EmailField
+    + phone_number: CharField(15)
+    + address: CharField
+    + city: CharField
+    + state: CharField
+    + zip_code: CharField
+    --
+    + __str__(): String
+}
+
+class RecordForm {
+    + Meta.model = Record
+    + fields: List
+    --
+    + is_valid(): Boolean
+    + save(): Record
+}
+
+class UserRegisterForm {
+    + Meta.model = User
+    + validators: RegexValidator
+    --
+    + __init__()
+    + save(): User
+}
+
+class RegexValidator {
+    + regex: String
+    + message: String
+}
+
+RecordForm ..> Record : "Crea / Actualiza (Patrón Factory/Builder)"
+RecordForm "1" *-- "many" RegexValidator : "Aplica validaciones estrictas"
+UserRegisterForm "1" *-- "many" RegexValidator : "Validación contraseñas y usuario"
+
+@enduml
