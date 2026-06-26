@@ -1,0 +1,572 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Django CRM - Sistema de gestión de relaciones con clientes y componentes premium">
+    <title>Django CRM — Panel de Gestión</title>
+    <link href="{% static 'css/bootstrap.min.css'%}" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* ========================================================
+           DESIGN SYSTEM — COSMIC NOIR (PREMIUM TEAL/CYAN THEME)
+           ======================================================== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+            /* Background layers */
+            --bg-deep: #030712;       /* Slate 950 */
+            --bg-base: #0b0f19;       /* Dark Cosmic Blue/Grey */
+            --bg-surface: rgba(13, 148, 136, 0.015);
+            --bg-elevated: rgba(255, 255, 255, 0.03);
+            --bg-glass: rgba(15, 23, 42, 0.45);
+            --bg-glass-hover: rgba(13, 148, 136, 0.08);
+
+            /* Borders */
+            --border-subtle: rgba(255, 255, 255, 0.04);
+            --border-default: rgba(13, 148, 136, 0.12);
+            --border-focus: rgba(6, 182, 212, 0.5);   /* Cyan */
+
+            /* Text */
+            --text-primary: #f8fafc;     /* Slate 50 */
+            --text-secondary: #94a3b8;   /* Slate 400 */
+            --text-muted: #475569;       /* Slate 600 */
+            --text-inverse: #030712;
+
+            /* Accent Colors */
+            --accent-teal: #0d9488;      /* Primary Teal */
+            --accent-cyan: #06b6d4;      /* Glowing Cyan */
+            --accent-purple: #8b5cf6;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, #0d9488 0%, #06b6d4 100%);
+            --gradient-sidebar: linear-gradient(180deg, #0b0f19 0%, #030712 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --gradient-danger: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+            --gradient-text: linear-gradient(135deg, #f8fafc 0%, #06b6d4 50%, #0d9488 100%);
+
+            /* Shadows */
+            --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 10px 40px rgba(0, 0, 0, 0.6);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.8);
+            --shadow-glow-cyan: 0 0 30px rgba(6, 182, 212, 0.15);
+            --shadow-glow-teal: 0 0 30px rgba(13, 148, 136, 0.15);
+
+            /* Radius */
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 30px;
+            --radius-full: 9999px;
+
+            /* Transitions */
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --duration-fast: 0.2s;
+            --duration-normal: 0.35s;
+            --duration-slow: 0.6s;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.6;
+        }
+
+        /* ---- Animated Cosmic Background ---- */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 90% 70% at 10% 10%, rgba(13, 148, 136, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 80% 60% at 90% 90%, rgba(6, 182, 212, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 50% 50%, rgba(139, 92, 246, 0.03) 0%, transparent 70%);
+            z-index: -2;
+            pointer-events: none;
+            animation: cosmicShift 25s ease-in-out infinite alternate;
+        }
+
+        @keyframes cosmicShift {
+            0% { opacity: 1; filter: hue-rotate(0deg); }
+            50% { opacity: 0.85; filter: hue-rotate(10deg); }
+            100% { opacity: 1; filter: hue-rotate(-15deg); }
+        }
+
+        /* ---- Floating Particles (CSS only) ---- */
+        .particles-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(6, 182, 212, 0.8);
+            border-radius: 50%;
+            animation: particleFloat linear infinite;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.8), 0 0 20px rgba(6, 182, 212, 0.4);
+        }
+
+        .particle:nth-child(1) { left: 8%; animation-duration: 22s; animation-delay: 0s; width: 2px; height: 2px; background: rgba(13, 148, 136, 0.8); box-shadow: 0 0 8px rgba(13, 148, 136, 0.8); }
+        .particle:nth-child(2) { left: 22%; animation-duration: 18s; animation-delay: -4s; width: 4px; height: 4px; background: rgba(6, 182, 212, 0.7); box-shadow: 0 0 12px rgba(6, 182, 212, 0.7); }
+        .particle:nth-child(3) { left: 38%; animation-duration: 25s; animation-delay: -9s; width: 2px; height: 2px; background: rgba(139, 92, 246, 0.6); box-shadow: 0 0 8px rgba(139, 92, 246, 0.6); }
+        .particle:nth-child(4) { left: 52%; animation-duration: 20s; animation-delay: -2s; width: 3px; height: 3px; background: rgba(6, 182, 212, 0.8); box-shadow: 0 0 10px rgba(6, 182, 212, 0.8); }
+        .particle:nth-child(5) { left: 68%; animation-duration: 28s; animation-delay: -6s; width: 2px; height: 2px; background: rgba(13, 148, 136, 0.7); box-shadow: 0 0 8px rgba(13, 148, 136, 0.7); }
+        .particle:nth-child(6) { left: 82%; animation-duration: 16s; animation-delay: -11s; width: 4px; height: 4px; background: rgba(6, 182, 212, 0.9); box-shadow: 0 0 12px rgba(6, 182, 212, 0.9); }
+        .particle:nth-child(7) { left: 14%; animation-duration: 32s; animation-delay: -3s; width: 2px; height: 2px; background: rgba(139, 92, 246, 0.6); box-shadow: 0 0 8px rgba(139, 92, 246, 0.6); }
+        .particle:nth-child(8) { left: 90%; animation-duration: 24s; animation-delay: -8s; width: 3px; height: 3px; background: rgba(13, 148, 136, 0.8); box-shadow: 0 0 10px rgba(13, 148, 136, 0.8); }
+
+        @keyframes particleFloat {
+            0% { transform: translateY(102vh) scale(0); opacity: 0; }
+            10% { opacity: 1; transform: translateY(90vh) scale(1); }
+            90% { opacity: 1; }
+            100% { transform: translateY(-2vh) scale(0.5); opacity: 0; }
+        }
+
+        /* ---- Layout Structures ---- */
+        body.has-sidebar {
+            display: flex;
+        }
+
+        .main-content-wrapper {
+            flex: 1;
+            min-width: 0;
+            padding: 2.5rem 3rem;
+            transition: all var(--duration-normal) var(--ease-out-expo);
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Mobile Header */
+        .mobile-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(11, 15, 25, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.8rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+            margin: -2.5rem -3rem 2rem -3rem;
+        }
+
+        .sidebar-toggle-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-toggle-btn:hover {
+            color: var(--accent-cyan);
+            border-color: var(--border-focus);
+            background: rgba(6, 182, 212, 0.1);
+        }
+
+        .mobile-logo-text {
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Auth Center Container */
+        .auth-container {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ---- Premium Floating Toast Messages ---- */
+        .msg-float {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 1100;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            max-width: 420px;
+            width: calc(100% - 48px);
+            pointer-events: none;
+        }
+
+        .alert {
+            pointer-events: auto;
+            font-family: var(--font-main);
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border-default);
+            color: var(--text-primary);
+            border-radius: var(--radius-md);
+            padding: 1.1rem 1.5rem;
+            backdrop-filter: blur(24px) saturate(1.4);
+            -webkit-backdrop-filter: blur(24px) saturate(1.4);
+            box-shadow: var(--shadow-lg), var(--shadow-glow-teal);
+            animation: toastSlideIn 0.5s var(--ease-spring);
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .alert::before {
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.08);
+            border-color: rgba(245, 158, 11, 0.25);
+            color: #fbcfe8; /* Fallback */
+            color: #fbbf24;
+            box-shadow: var(--shadow-lg), 0 0 20px rgba(245, 158, 11, 0.1);
+        }
+        .alert-warning::before { content: '⚠️'; }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.08);
+            border-color: rgba(16, 185, 129, 0.25);
+            color: #34d399;
+            box-shadow: var(--shadow-lg), 0 0 20px rgba(16, 185, 129, 0.1);
+        }
+        .alert-success::before { content: '✨'; }
+
+        .alert-danger, .alert-error {
+            background: rgba(244, 63, 94, 0.08);
+            border-color: rgba(244, 63, 94, 0.25);
+            color: #fb7185;
+            box-shadow: var(--shadow-lg), 0 0 20px rgba(244, 63, 94, 0.1);
+        }
+        .alert-danger::before, .alert-error::before { content: '🛡️'; }
+
+        .alert .btn-close {
+            filter: invert(1) brightness(0.9);
+            margin-left: auto;
+            padding: 0;
+            width: 0.8rem;
+            height: 0.8rem;
+        }
+
+        @keyframes toastSlideIn {
+            from { opacity: 0; transform: translateY(-24px) scale(0.92); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* ---- Custom Scrollbar ---- */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(13, 148, 136, 0.2);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(6, 182, 212, 0.4);
+        }
+
+        ::selection {
+            background: rgba(6, 182, 212, 0.3);
+            color: #fff;
+        }
+
+        /* ---- Animations ---- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .animate-fade-in { animation: fadeInUp 0.5s var(--ease-out-expo) both; }
+        .animate-fade-in-d1 { animation: fadeInUp 0.5s var(--ease-out-expo) 0.1s both; }
+        .animate-fade-in-d2 { animation: fadeInUp 0.5s var(--ease-out-expo) 0.2s both; }
+        .animate-fade-in-d3 { animation: fadeInUp 0.5s var(--ease-out-expo) 0.3s both; }
+        .animate-fade-in-d4 { animation: fadeInUp 0.5s var(--ease-out-expo) 0.4s both; }
+        .animate-scale-in { animation: fadeInScale 0.45s var(--ease-spring) both; }
+
+        /* Guest Navbar */
+        .guest-navbar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 3rem;
+            z-index: 1000;
+        }
+
+        .guest-logo {
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .guest-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-guest {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 0.5rem 1.2rem;
+            border-radius: var(--radius-full);
+            transition: all var(--duration-fast) ease;
+        }
+
+        .btn-guest:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-guest-primary {
+            color: #fff !important;
+            background: rgba(13, 148, 136, 0.15);
+            border: 1px solid rgba(13, 148, 136, 0.3);
+            box-shadow: var(--shadow-glow-teal);
+        }
+
+        .btn-guest-primary:hover {
+            background: rgba(13, 148, 136, 0.3);
+            border-color: rgba(13, 148, 136, 0.5);
+            transform: translateY(-1px);
+        }
+
+        /* Desktop specific layout */
+        @media (min-width: 992px) {
+            body.has-sidebar {
+                padding-left: 280px;
+            }
+        }
+
+        /* Mobile specific spacing */
+        @media (max-width: 991px) {
+            .main-content-wrapper {
+                padding: 1.5rem 1.5rem 3rem 1.5rem;
+            }
+            .guest-navbar {
+                padding: 1rem 1.5rem;
+            }
+            .guest-logo {
+                font-size: 1.1rem;
+            }
+            .btn-guest {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Dropdown options readability fix */
+        select option {
+            background-color: var(--bg-base) !important;
+            color: var(--text-primary) !important;
+        }
+    </style>
+</head>
+<body class="{% if user.is_authenticated %}has-sidebar{% endif %}">
+    <!-- Cosmic Particles Background -->
+    <div class="particles-bg">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    {% if user.is_authenticated %}
+        <!-- Sidebar Navigation Included -->
+        {% include 'navbar.html' %}
+    {% endif %}
+        
+    <div class="{% if user.is_authenticated %}main-content-wrapper{% else %}auth-container{% endif %}">
+        {% if user.is_authenticated %}
+            <!-- Mobile Header -->
+            <header class="mobile-header d-lg-none">
+                <button class="sidebar-toggle-btn" id="mobileSidebarToggle" aria-label="Abrir Menú">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+                <div class="mobile-logo-text">⚡ CRM PRO</div>
+            </header>
+        {% else %}
+            <!-- Guest Navbar -->
+            <nav class="guest-navbar animate-fade-in">
+                <div class="guest-logo">⚡ CRM PRO</div>
+                <div class="guest-links">
+                    <a href="{% url 'home' %}" class="btn-guest btn-guest-primary">Iniciar Sesión</a>
+                    <a href="{% url 'register' %}" class="btn-guest">Registrarse</a>
+                </div>
+            </nav>
+        {% endif %}
+
+        {% if messages %}
+        <div class="msg-float">
+            {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div id="app-content">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script>
+        // Mobile Sidebar Toggle Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('mobileSidebarToggle');
+            const sidebar = document.querySelector('.crm-sidebar');
+            const backdrop = document.querySelector('.sidebar-backdrop');
+
+            if (toggleBtn && sidebar) {
+                toggleBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    sidebar.classList.toggle('active');
+                    if (backdrop) backdrop.classList.toggle('active');
+                });
+            }
+
+            // Close sidebar on clicking backdrop or outside
+            document.addEventListener('click', (e) => {
+                if (sidebar && sidebar.classList.contains('active')) {
+                    if (!sidebar.contains(e.target) && e.target !== toggleBtn) {
+                        sidebar.classList.remove('active');
+                        if (backdrop) backdrop.classList.remove('active');
+                    }
+                }
+            });
+
+            // Auto dismiss alert toasts after 5 seconds
+            setTimeout(() => {
+                document.querySelectorAll('.msg-float .alert').forEach(alert => {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                });
+            }, 5000);
+
+            // SPA Navigation Logic
+            document.body.addEventListener('click', e => {
+                const link = e.target.closest('a.spa-link');
+                if (!link) return;
+                if (e.defaultPrevented) return;
+                
+                e.preventDefault();
+                const url = link.getAttribute('href');
+                if (url === '#' || !url) return;
+                
+                // Show a simple loading indicator or just fetch
+                fetch(url)
+                    .then(response => {
+                        if (response.redirected) {
+                            window.location.href = response.url; // Handle redirects (e.g. login)
+                            throw new Error('Redirected');
+                        }
+                        return response.text();
+                    })
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        
+                        // Update content
+                        const newContent = doc.getElementById('app-content');
+                        if (newContent) {
+                            document.getElementById('app-content').innerHTML = newContent.innerHTML;
+                        }
+                        
+                        // Update URL
+                        window.history.pushState({}, '', url);
+                        
+                        if (doc.title) document.title = doc.title;
+                        
+                        // Update messages
+                        const newMsgs = doc.querySelector('.msg-float');
+                        const currentMsgs = document.querySelector('.msg-float');
+                        if (newMsgs && currentMsgs) {
+                            currentMsgs.innerHTML = newMsgs.innerHTML;
+                        } else if (newMsgs && !currentMsgs) {
+                            document.querySelector('.main-content-wrapper').insertBefore(newMsgs, document.getElementById('app-content'));
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error in SPA navigation:', err);
+                        if (err.message !== 'Redirected') {
+                            window.location.href = url; // fallback
+                        }
+                    });
+            });
+            
+            // Handle browser back/forward buttons
+            window.addEventListener('popstate', () => {
+                window.location.reload();
+            });
+        });
+    </script>
+</body>
+</html>
