@@ -1,0 +1,1011 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    /* ========================================================
+       HOME & DASHBOARD — COSMIC NOIR STYLING
+       ======================================================== */
+
+    .crm-home {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    /* ============= 1. NOT AUTHENTICATED — LOGIN PANEL ============= */
+    .login-scene {
+        width: 100%;
+        max-width: 440px;
+        margin: 0 auto;
+        background: rgba(11, 15, 25, 0.65);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        box-shadow: var(--shadow-lg), var(--shadow-glow-cyan);
+    }
+
+    /* Left Hero Panel */
+    .login-hero {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 4rem 3rem;
+        position: relative;
+        overflow: hidden;
+        background: rgba(3, 7, 18, 0.3);
+    }
+
+    .login-hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(circle at 20% 30%, rgba(13, 148, 136, 0.12) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
+        pointer-events: none;
+    }
+
+    /* Rotating orbits */
+    .login-hero-orb {
+        position: absolute;
+        border-radius: 50%;
+        border: 1px solid rgba(6, 182, 212, 0.06);
+        animation: orbit-spin 40s linear infinite;
+    }
+
+    .login-hero-orb:nth-child(1) {
+        width: 320px; height: 320px;
+        top: 5%; left: -15%;
+        border-color: rgba(13, 148, 136, 0.08);
+    }
+
+    .login-hero-orb:nth-child(2) {
+        width: 240px; height: 240px;
+        bottom: 10%; right: -10%;
+        border-color: rgba(6, 182, 212, 0.05);
+        animation-duration: 30s;
+        animation-direction: reverse;
+    }
+
+    @keyframes orbit-spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .login-hero::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 15%;
+        height: 70%;
+        width: 1px;
+        background: linear-gradient(to bottom, transparent, rgba(13, 148, 136, 0.2), rgba(6, 182, 212, 0.2), transparent);
+    }
+
+    .login-hero-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        max-width: 440px;
+    }
+
+    .login-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.45rem 1.1rem;
+        border-radius: var(--radius-full);
+        background: rgba(13, 148, 136, 0.08);
+        border: 1px solid rgba(13, 148, 136, 0.15);
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--accent-cyan);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 2rem;
+    }
+
+    .login-hero-badge::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent-cyan);
+        animation: pulse-ring 2s ease-in-out infinite;
+    }
+
+    .login-hero h1 {
+        font-size: 2.8rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        background: var(--gradient-text);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .login-hero p {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        line-height: 1.7;
+        max-width: 380px;
+        margin: 0 auto;
+    }
+
+    .login-hero-stats {
+        display: flex;
+        gap: 2.5rem;
+        margin-top: 3rem;
+        justify-content: center;
+    }
+
+    .login-hero-stat {
+        text-align: center;
+    }
+
+    .login-hero-stat-value {
+        font-size: 1.7rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        letter-spacing: -0.02em;
+    }
+
+    .login-hero-stat-label {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-top: 0.2rem;
+    }
+
+    /* Right Login Form Panel */
+    .login-form-panel {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 4rem 3.5rem;
+        background: rgba(3, 7, 18, 0.15);
+    }
+
+    .login-form-header {
+        margin-bottom: 2.5rem;
+    }
+
+    .login-form-header h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        letter-spacing: -0.02em;
+        margin-bottom: 0.4rem;
+    }
+
+    .login-form-header p {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    /* Inputs */
+    .input-group-modern {
+        margin-bottom: 1.5rem;
+    }
+
+    .input-group-modern label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.55rem;
+    }
+
+    .input-group-modern label .required-dot {
+        display: inline-block;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--accent-rose);
+        margin-left: 0.3rem;
+        vertical-align: middle;
+    }
+
+    .input-wrapper {
+        display: flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-md);
+        transition: all var(--duration-normal) var(--ease-out-expo);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .input-wrapper::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--gradient-primary);
+        transition: all var(--duration-normal) var(--ease-out-expo);
+        transform: translateX(-50%);
+    }
+
+    .input-wrapper:focus-within {
+        border-color: var(--border-focus);
+        background: rgba(13, 148, 136, 0.03);
+        box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.08), 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .input-wrapper:focus-within::after {
+        width: 100%;
+    }
+
+    .input-icon {
+        padding: 0 1rem;
+        color: var(--text-muted);
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        transition: color var(--duration-fast) ease;
+    }
+
+    .input-wrapper:focus-within .input-icon {
+        color: var(--accent-cyan);
+    }
+
+    .input-field {
+        flex: 1;
+        background: transparent !important;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        color: var(--text-primary) !important;
+        font-size: 0.95rem;
+        padding: 0.9rem 1rem 0.9rem 0;
+        width: 100%;
+    }
+
+    .input-field::placeholder {
+        color: var(--text-muted);
+    }
+
+    .input-toggle {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        padding: 0 1rem;
+        cursor: pointer;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        transition: color var(--duration-fast) ease;
+    }
+
+    .input-toggle:hover {
+        color: var(--text-secondary);
+    }
+
+    .input-hint {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: 0.4rem;
+    }
+
+    /* Remember Row */
+    .login-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+    }
+
+    .login-check {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+    }
+
+    .login-check input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        border: 1.5px solid var(--border-default);
+        background: rgba(255, 255, 255, 0.02);
+        appearance: none;
+        -webkit-appearance: none;
+        cursor: pointer;
+        transition: all var(--duration-fast) ease;
+        position: relative;
+    }
+
+    .login-check input[type="checkbox"]:checked {
+        background: var(--accent-teal);
+        border-color: var(--accent-teal);
+    }
+
+    .login-check input[type="checkbox"]:checked::after {
+        content: '✓';
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        color: #fff;
+        font-weight: 700;
+    }
+
+    .login-check span {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .login-forgot {
+        color: var(--accent-cyan);
+        text-decoration: none !important;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: color var(--duration-fast) ease;
+    }
+
+    .login-forgot:hover {
+        color: var(--accent-teal);
+    }
+
+    /* Premium Button */
+    .btn-premium {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        width: 100%;
+        padding: 0.95rem 2rem;
+        background: var(--gradient-primary);
+        color: #fff !important;
+        border: none;
+        border-radius: var(--radius-md);
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all var(--duration-normal) var(--ease-out-expo);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(13, 148, 136, 0.25);
+    }
+
+    .btn-premium::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+        opacity: 0;
+        transition: opacity var(--duration-fast) ease;
+    }
+
+    .btn-premium:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(13, 148, 136, 0.35), var(--shadow-glow-cyan);
+    }
+
+    .btn-premium:hover::before { opacity: 1; }
+
+    .btn-premium .btn-arrow {
+        transition: transform var(--duration-fast) var(--ease-out-expo);
+    }
+
+    .btn-premium:hover .btn-arrow {
+        transform: translateX(4px);
+    }
+
+    /* ============= 2. AUTHENTICATED — DASHBOARD PANEL ============= */
+    .dashboard-container {
+        width: 100%;
+        animation: fadeInUp 0.5s var(--ease-out-expo) both;
+    }
+
+    /* Dashboard Header */
+    .dash-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2.5rem;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .dash-header-left h1 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        background: var(--gradient-text);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.2rem;
+    }
+
+    .dash-header-left p {
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+    }
+
+    .btn-add-record {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.75rem 1.6rem;
+        background: var(--gradient-primary);
+        color: #fff !important;
+        text-decoration: none !important;
+        border-radius: var(--radius-full);
+        font-size: 0.9rem;
+        font-weight: 700;
+        transition: all var(--duration-normal) var(--ease-out-expo);
+        box-shadow: var(--shadow-glow-teal);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-add-record::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+        opacity: 0;
+        transition: opacity var(--duration-fast) ease;
+    }
+
+    .btn-add-record:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(13, 148, 136, 0.4);
+    }
+
+    .btn-add-record:hover::before { opacity: 1; }
+
+    .btn-add-icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        font-weight: 800;
+    }
+
+    /* Stats Dashboard Row */
+    .dash-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .dash-stat-card {
+        background: rgba(11, 15, 25, 0.4);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-md);
+        padding: 1.5rem 1.75rem;
+        transition: all var(--duration-normal) var(--ease-out-expo);
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+
+    .dash-stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        opacity: 0.7;
+        transition: height 0.3s ease;
+    }
+
+    .dash-stat-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(6, 182, 212, 0.25);
+        box-shadow: var(--shadow-sm), var(--shadow-glow-cyan);
+    }
+
+    .dash-stat-card:hover::before {
+        height: 4px;
+    }
+
+    .dash-stat-card:nth-child(1)::before { background: var(--gradient-primary); }
+    .dash-stat-card:nth-child(2)::before { background: var(--gradient-success); }
+    .dash-stat-card:nth-child(3)::before { background: var(--gradient-warning); }
+
+    .dash-stat-icon {
+        font-size: 1.6rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .dash-stat-value {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        letter-spacing: -0.02em;
+    }
+
+    .dash-stat-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-top: 0.2rem;
+        font-weight: 600;
+    }
+
+    /* Premium Glassmorphic Table Container */
+    .table-container {
+        background: rgba(11, 15, 25, 0.4);
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: var(--shadow-md);
+        position: relative;
+    }
+
+    .table-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--gradient-primary);
+    }
+
+    .table-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.5rem 1.75rem;
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .table-header h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .table-header .table-count {
+        font-size: 0.78rem;
+        color: var(--accent-cyan);
+        background: rgba(6, 182, 212, 0.08);
+        padding: 0.3rem 0.85rem;
+        border-radius: var(--radius-full);
+        border: 1px solid rgba(6, 182, 212, 0.15);
+        font-weight: 700;
+        font-family: var(--font-mono);
+    }
+
+    .data-table-wrapper {
+        overflow-x: auto;
+        width: 100%;
+    }
+
+    .data-table {
+        width: 100%;
+        min-width: 950px;
+        border-collapse: collapse;
+    }
+
+    .data-table thead th {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-muted);
+        padding: 1rem 1.25rem;
+        background: rgba(3, 7, 18, 0.2);
+        border-bottom: 1px solid var(--border-subtle);
+        white-space: nowrap;
+        text-align: left;
+    }
+
+    .data-table tbody tr {
+        border-bottom: 1px solid var(--border-subtle);
+        transition: background-color var(--duration-fast) ease;
+    }
+
+    .data-table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .data-table tbody tr:hover {
+        background: rgba(13, 148, 136, 0.03);
+    }
+
+    .data-table tbody td,
+    .data-table tbody th {
+        font-size: 0.92rem;
+        color: var(--text-secondary);
+        padding: 1.1rem 1.25rem;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    .data-table tbody th {
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    .data-table .cell-mono {
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        color: var(--accent-cyan);
+    }
+
+    /* Actions Column Button */
+    .btn-view {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.45rem 1rem;
+        background: rgba(6, 182, 212, 0.08);
+        color: var(--accent-cyan);
+        border: 1px solid rgba(6, 182, 212, 0.2);
+        border-radius: var(--radius-sm);
+        text-decoration: none !important;
+        font-weight: 700;
+        font-size: 0.8rem;
+        transition: all var(--duration-fast) ease;
+    }
+
+    .btn-view:hover {
+        background: rgba(6, 182, 212, 0.18);
+        color: #fff;
+        border-color: var(--accent-cyan);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
+    }
+
+    .btn-view svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    /* Empty Table State */
+    .table-empty {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+
+    .table-empty-icon {
+        font-size: 3rem;
+        margin-bottom: 1.2rem;
+        opacity: 0.4;
+    }
+
+    .table-empty h4 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+        margin-bottom: 0.4rem;
+    }
+
+    .table-empty p {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        max-width: 320px;
+        margin: 0 auto;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 991px) {
+        .login-scene {
+            grid-template-columns: 1fr;
+            min-height: auto;
+        }
+
+        .login-hero {
+            padding: 3rem 2rem;
+            min-height: 250px;
+        }
+
+        .login-hero::after {
+            display: none;
+        }
+
+        .login-hero h1 {
+            font-size: 2.2rem;
+        }
+
+        .login-hero-stats {
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .login-form-panel {
+            padding: 3rem 2rem;
+        }
+
+        .dash-stats {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        /* Mobile table layout */
+        .table-container {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            overflow: visible;
+        }
+        .table-container::before { display: none; }
+        .table-header { display: none; }
+
+        .data-table,
+        .data-table thead,
+        .data-table tbody,
+        .data-table th,
+        .data-table td,
+        .data-table tr {
+            display: block;
+        }
+
+        .data-table thead { display: none; }
+        .data-table { min-width: 0; }
+
+        .data-table tbody tr {
+            margin-bottom: 1.25rem;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: rgba(11, 15, 25, 0.5);
+            border: 1px solid var(--border-default);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .data-table td,
+        .data-table th {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            white-space: normal;
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.8rem 1.2rem;
+            text-align: right;
+            font-size: 0.88rem;
+        }
+
+        .data-table td::before {
+            content: attr(data-label);
+            flex: 0 0 40%;
+            text-align: left;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .data-table th::before {
+            content: "Nro. Registro";
+            flex: 0 0 40%;
+            text-align: left;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+    }
+</style>
+
+<div class="crm-home">
+    {% if user.is_authenticated %}
+        <!-- ============= AUTHENTICATED: FULL WIDTH DASHBOARD ============= -->
+        <div class="dashboard-container">
+            <!-- Header -->
+            <div class="dash-header">
+                <div class="dash-header-left">
+                    {% if is_admin %}
+                    <h1>Panel de Administrador</h1>
+                    <p>Gestión completa de registros y permisos del sistema.</p>
+                    {% else %}
+                    <h1>Panel de Usuario</h1>
+                    <p>Visualiza tus contactos del CRM en tiempo real.</p>
+                    {% endif %}
+                </div>
+                <a href="{% url 'add_record' %}" class="btn-add-record spa-link">
+                    <span class="btn-add-icon">+</span>
+                    Nuevo Registro
+                </a>
+            </div>
+
+            <!-- Stats -->
+            <div class="dash-stats">
+                <div class="dash-stat-card">
+                    <div class="dash-stat-icon">📋</div>
+                    <div class="dash-stat-value">{{ records|length }}</div>
+                    <div class="dash-stat-label">Total registros</div>
+                </div>
+                <div class="dash-stat-card">
+                    <div class="dash-stat-icon">✨</div>
+                    <div class="dash-stat-value">{{ records|length }}</div>
+                    <div class="dash-stat-label">Activos</div>
+                </div>
+                <div class="dash-stat-card">
+                    <div class="dash-stat-icon">⏱️</div>
+                    <div class="dash-stat-value">Hoy</div>
+                    <div class="dash-stat-label">Último Acceso</div>
+                </div>
+            </div>
+
+            <!-- Records Table -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>Lista General de Registros</h3>
+                    <span class="table-count">{{ records|length }} contactos</span>
+                </div>
+                
+                <div class="data-table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Dirección</th>
+                                <th>Ciudad</th>
+                                <th>Estado</th>
+                                <th>C.P.</th>
+                                <th>Fecha Reg.</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if records %}
+                                {% for record in records %}
+                                <tr>
+                                    <th scope="row" class="cell-mono">{{ forloop.counter }}</th>
+                                    <td data-label="Nombre">{{ record.first_name }}</td>
+                                    <td data-label="Apellido">{{ record.last_name }}</td>
+                                    <td data-label="Email">{{ record.email }}</td>
+                                    <td data-label="Teléfono" class="cell-mono">{{ record.phone_number }}</td>
+                                    <td data-label="Dirección">{{ record.address }}</td>
+                                    <td data-label="Ciudad">{{ record.city }}</td>
+                                    <td data-label="Estado">{{ record.state }}</td>
+                                    <td data-label="C.P." class="cell-mono">{{ record.zip_code }}</td>
+                                    <td data-label="Fecha Reg.">{{ record.created_at|date:"d/m/Y" }}</td>
+                                    <td data-label="Acción">
+                                        <a href="{% url 'record' record.id %}" class="btn-view spa-link">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                            </svg>
+                                            Ver Detalle
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="11">
+                                        <div class="table-empty">
+                                            <div class="table-empty-icon">📭</div>
+                                            <h4>Sin contactos registrados</h4>
+                                            <p>Comienza agregando un nuevo contacto utilizando el botón superior.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        <!-- ============= NOT AUTHENTICATED: LOGIN VIEW ============= -->
+        <div class="login-scene animate-scale-in">
+            <!-- Login Form Panel -->
+            <div class="login-form-panel">
+                <div class="login-form-header animate-fade-in">
+                    <h2>Iniciar Sesión</h2>
+                    <p>Ingresa tus datos para acceder al panel administrativo.</p>
+                </div>
+
+                <form method="POST" action="{% url 'home' %}" novalidate>
+                    {% csrf_token %}
+
+                    <!-- Username field -->
+                    <div class="input-group-modern animate-fade-in-d1">
+                        <label for="username">
+                            Usuario <span class="required-dot"></span>
+                        </label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                </svg>
+                            </span>
+                            <input type="text" class="input-field" name="username" id="username" placeholder="Tu usuario" required autocomplete="username">
+                        </div>
+                    </div>
+
+                    <!-- Password field -->
+                    <div class="input-group-modern animate-fade-in-d2">
+                        <label for="password">
+                            Contraseña <span class="required-dot"></span>
+                        </label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                </svg>
+                            </span>
+                            <input type="password" class="input-field" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+                            <button class="input-toggle" type="button" id="togglePassword" aria-label="Mostrar contraseña">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="login-row animate-fade-in-d3">
+                        <label class="login-check">
+                            <input type="checkbox" name="remember">
+                            <span>Recordarme</span>
+                        </label>
+                        <a href="{% url 'register' %}" class="login-forgot">¿No tienes cuenta? Registrate</a>
+                    </div>
+
+                    <button type="submit" class="btn-premium animate-fade-in-d4">
+                        <span>Ingresar al Sistema</span>
+                        <span class="btn-arrow">→</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Toggle password visibility logic
+        const toggleBtn = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        if (toggleBtn && passwordInput) {
+            toggleBtn.addEventListener('click', function() {
+                const isPassword = passwordInput.type === 'password';
+                passwordInput.type = isPassword ? 'text' : 'password';
+                this.innerHTML = isPassword
+                    ? `<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"/>
+                       </svg>`
+                    : `<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                       </svg>`;
+            });
+        }
+    });
+</script>
+
+{% endblock %}
