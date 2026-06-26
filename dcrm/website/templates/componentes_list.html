@@ -692,9 +692,8 @@
                     <select class="filter-control form-select" name="categoria" id="categoria">
                         <option value="">Todas</option>
                         {% for cat_val, cat_lbl in categorias %}
-                        <option value="{{ cat_val }}" {% if filtros.categoria==cat_val %}selected{% endif %}>{{ cat_lbl
-                            }}</option>
-                        {% endfor %}
+    <option value="{{ cat_val }}" {% if filtros.categoria == cat_val %}selected{% endif %}>{{ cat_lbl }}</option>
+{% endfor %}
                     </select>
                 </div>
 
